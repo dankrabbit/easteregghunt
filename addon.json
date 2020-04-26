@@ -1,0 +1,11 @@
+{
+	"title"		:	"Easter Egg Hunt",
+	"type"		:	"ServerContent",
+	"tags"		:	[ "roleplay", "fun" ],
+	"ignore"	:
+	[
+		"*.psd",
+		"*.vcproj",
+		"*.svn*"
+	]
+}
