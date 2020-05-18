@@ -1,3 +1,17 @@
+--      ___           ___           ___           ___           ___           ___                 
+--     /  /\         /  /\         /  /\         /__/\         /__/\         /__/\          ___   
+--    /  /:/_       /  /:/_       /  /:/_        \  \:\        \  \:\        \  \:\        /  /\  
+--   /  /:/ /\     /  /:/ /\     /  /:/ /\        \__\:\        \  \:\        \  \:\      /  /:/  
+--  /  /:/ /:/_   /  /:/_/::\   /  /:/_/::\   ___ /  /::\   ___  \  \:\   _____\__\:\    /  /:/   
+-- /__/:/ /:/ /\ /__/:/__\/\:\ /__/:/__\/\:\ /__/\  /:/\:\ /__/\  \__\:\ /__/::::::::\  /  /::\   
+-- \  \:\/:/ /:/ \  \:\O/~~/:/ \  \:\ /~~/:/ \  \:\/:/__\/ \  \:\ /  /:/ \  \:\~~\~~\/ /__/:/\:\  
+--  \  \::/ /:/   \  \:\  /:/   \  \:\  /:/   \  \::/       \  \:\  /:/   \  \:\  ~~~  \__\/  \:\ 
+--   \  \:\/:/     \  \:\/:/     \  \:\/:/     \  \:\        \  \:\/:/     \  \:\           \  \:\
+--    \  \::/       \  \::/       \  \::/       \  \:\        \  \::/       \  \:\           \__\/
+--     \__\/         \__\/         \__\/         \__\/         \__\/         \__\/                
+--
+--	~ By Dank
+
 //	gameType = 1 -- All eggs in eggHunt.pos are spawned at once and aren't removed on PlayerUse
 //	gameType = 2 -- Uses entLimit for egg spawning and removes them on PlayerUse
 eggHunt.gameType = 2
@@ -10,8 +24,11 @@ eggHunt.ent	= "easteregghunt_egg"	-- The easter egg entity
 eggHunt.entLimit	= 1				-- Amount of eggs that can exist at once
 eggHunt.announce	= false			-- Announce when an egg spawns
 eggHunt.spawnTimer	= 300			-- Egg respawn time after last found
-eggHunt.rewardType	= 2				-- 1 = Vrondakis XP; 2 = DarkRP Money
+eggHunt.rewardType	= 2				-- 1 = Vrondakis XP; 2 = DarkRP Money; 3 = eggHunt.rewardFunc
 eggHunt.reward		= 100			-- Amount of rewardType
+function eggHunt.rewardFunc(ply)	-- rewardType 3, do whatever you want with it
+	ply:AddSkillXP(eggHunt.reward)
+end
 
 eggHunt.respawnCmd = "!respawneasteregg"	-- Command to force egg respawn. Set to nil to disable
 eggHunt.ulx = {		-- ULX Ranks that can use chat commands. Set to nil to default to ply:IsSuperAdmin()					
@@ -19,7 +36,8 @@ eggHunt.ulx = {		-- ULX Ranks that can use chat commands. Set to nil to default 
 	["admin"] = true,
 }
 
-eggHunt.resource = true	-- AddWorkshop for roblox easter egg models?
+eggHunt.WorkshopID = "1355735830"	-- WorkshopID for Roblox Easter Eggs
+eggHunt.resource = true	-- AddWorkshop for WorkshopID
 eggHunt.models = {		-- Randomized table of models for easter eggs
 	"models/roblox_assets/basic_egg_2014.mdl",
 	"models/roblox_assets/stationary_egg_of_boring.mdl",
@@ -28,14 +46,16 @@ eggHunt.models = {		-- Randomized table of models for easter eggs
 	"models/roblox_assets/colored_dot_egg.mdl",
 	"models/roblox_assets/starry_egg_of_the_wild_ride.mdl",
 	"models/roblox_assets/the_easiest_egg.mdl",
-	"models/roblox_assets/the_cloud_egg.mdl",
-	"models/roblox_assets/eggotrip.mdl",
 	"models/roblox_assets/eggvertisement_egg.mdl",
+	"models/roblox_assets/eggotrip.mdl",
+	"models/roblox_assets/supercharged_striker_egg.mdl",
+	"models/roblox_assets/fiery_egg_of_egg_testing.mdl",
+	"models/roblox_assets/zenos_egg_of_paradox.mdl",
 }
 
 eggHunt.setSpawn	= "!seteggspawn"		-- Sets new spawn location for easter eggs
 eggHunt.clearSpawns	= "!cleareggspawns"		-- Clears all spawn locations made with eggHunt.setSpawn
-eggHunt.spawnTable	= 1	-- Type 1 uses eggHunt.pos; Type 2 uses chat commands in-game
+eggHunt.spawnTable	= 2	-- Type 1 uses eggHunt.pos; Type 2 uses chat commands in-game
 -- Note: spawnTable 2 is currently not compatible with gameType 1
 
 eggHunt.pos = {			-- Spawn positions for easter eggs if spawnTable 1

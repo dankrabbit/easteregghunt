@@ -16,9 +16,16 @@ local function getNewEggSpawn()
 	local location
 	if eggHunt.spawnTable == 1 then
 		location = table.Random(eggHunt.pos)
+		if eggHunt.lastSpot and table.Count(eggHunt.pos) > 1 then
+			while eggHunt.lastSpot == location do location = table.Random(eggHunt.pos) end
+		end
 	elseif eggHunt.spawnTable == 2 then
 		location = table.Random(eggHunt.pos2)
+		if eggHunt.lastSpot and table.Count(eggHunt.pos2) > 1 then
+			while eggHunt.lastSpot == location do location = table.Random(eggHunt.pos2) end
+		end
 	end
+	if eggHunt.gameType == 2 then eggHunt.lastSpot = location end
 	return location
 end
 
@@ -47,10 +54,12 @@ hook.Add("PlayerUse", "EasterEggHunt_FoundEgg", function(ply, ent)
 
 	if eggHunt.rewardType == 1 then
 		ply:addXP(eggHunt.reward)
-		ply:PrintMessage(HUD_PRINTTALK, eggHunt.lang["got"] .. " " .. reward .. " XP " .. eggHunt.lang["reward"])
+		ply:PrintMessage(HUD_PRINTTALK, eggHunt.lang["got"] .. " " .. eggHunt.reward .. " XP " .. eggHunt.lang["reward"])
 	elseif eggHunt.rewardType == 2 then
 		ply:addMoney(eggHunt.reward)
-		ply:PrintMessage(HUD_PRINTTALK, eggHunt.lang["got"] .. " $" .. reward .. " " .. eggHunt.lang["reward"])
+		ply:PrintMessage(HUD_PRINTTALK, eggHunt.lang["got"] .. " $" .. eggHunt.reward .. " " .. eggHunt.lang["reward"])
+	elseif eggHunt.rewardType == 3 then
+		eggHunt.rewardFunc(ply)
 	end
 end)
 
@@ -60,7 +69,9 @@ if eggHunt.gameType == 1 then
 	timer.Create("EasterEggHunt_Spawner1", eggHunt.spawnTimer, 0, function()
 		if #ents.FindByClass(eggHunt.ent) == eggHunt.entLimit then return end
 
-		for k,v in pairs(eggHunt.pos) do
+		local tbl = eggHunt.pos2
+		if eggHunt.spawnTable == 1 then tbl = eggHunt.pos end
+		for k,v in pairs(tbl) do
 			if #ents.FindByClass(eggHunt.ent) >= eggHunt.entLimit then return end
 
 			if eggHunt.debug then print("An easter egg has spawned at " .. v) end
@@ -98,12 +109,17 @@ hook.Add("PlayerSay", "EasterEggHunt_respawnCMD", function( ply, text )
 		if !eggHunt.announce then ply:PrintMessage(HUD_PRINTTALK, eggHunt.lang["eggSpawned"]) end
 
 	elseif string.lower( text ) == eggHunt.clearSpawns then
-		if table.Exists(eggHunt.pos2) then table.Empty(eggHunt.pos2) end
+		if eggHunt.pos2 then table.Empty(eggHunt.pos2) end
+		for k, v in pairs( ents.FindByClass(eggHunt.ent) ) do
+			if #ents.FindByClass(eggHunt.ent) <= eggHunt.entLimit then return end
+			ent:Remove()
+		end
 
 	elseif  string.lower( text ) == eggHunt.setSpawn then
-		if !table.Exists(eggHunt.pos2) then return end
+		if !eggHunt.pos2 then return end
 
-		local location = ply:GetPos()
+		local location = ply:GetPos() + Vector(0, 0, 42)
 		table.insert(eggHunt.pos2, tostring(location))
 	end
 end)
+print("EasterEggHunt has loaded!")
